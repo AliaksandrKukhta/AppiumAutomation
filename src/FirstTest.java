@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -70,16 +71,49 @@ public class FirstTest {
                 5);
 
         waitForElementAndClear(By.id("org.wikipedia:id/search_close_btn"), "Oh no", 10);
-        boolean here=elementIsDisplayed(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+        boolean here = elementIsDisplayed(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Test 'Search Wikipedia is not found'",
                 10);
         Assert.assertTrue(here);
+    }
+
+    @Test
+    public void someWordInEveryFindElementsTest() throws InterruptedException {
+        waitForElementAndClick(By.xpath("//*[contains(@text,'SKIP')]"),
+                "The 'Skip' button is not found",
+                5);
+        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Test 'Search Wikipedia is not found'",
+                10);
+
+        waitForElementAndSendKeys(By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "This text is not found",
+                5);
+        Thread.sleep(5000);
+        List<WebElement> listOfFindElements = assertElementsHasText(By.xpath("//*[contains(@resource-id, 'org.wikipedia:id/page_list_item_title')]"),
+                "message",
+                10);
+        String someText = "Java";
+        boolean containsSomeText = false;
+        for (int i = 0; i < listOfFindElements.size(); i++) {
+            if (listOfFindElements.get(i).getText().contains(someText)) {
+                containsSomeText = true;
+            }
+        }
+        Assert.assertTrue(containsSomeText);
     }
 
     public WebElement assertElementHasText(By by, String errorMessage, long time) {
         WebDriverWait wait = new WebDriverWait(driver, time);
         wait.withMessage(errorMessage);
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    public List<WebElement> assertElementsHasText(By by, String errorMessage, long time) {
+        WebDriverWait wait = new WebDriverWait(driver, time);
+        wait.withMessage(errorMessage);
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
     }
 
     public WebElement assertElementHasText(By by, String errorMessage) {
@@ -110,7 +144,7 @@ public class FirstTest {
         return element;
     }
 
-    public boolean elementIsDisplayed(By by, String errorMessage, long time){
+    public boolean elementIsDisplayed(By by, String errorMessage, long time) {
         WebDriverWait wait = new WebDriverWait(driver, time);
         wait.withMessage(errorMessage);
         return wait.until(ExpectedConditions.visibilityOfElementLocated(by)).isDisplayed();
