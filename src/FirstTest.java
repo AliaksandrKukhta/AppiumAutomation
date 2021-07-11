@@ -210,6 +210,28 @@ public class FirstTest {
                 20).isDisplayed());
     }
 
+    @Test
+    public void titlePresentTest(){
+        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Test 'Search Wikipedia is not found'",
+                10);
+
+        waitForElementAndSendKeys(By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "This text is not found",
+                5);
+
+        waitForElementAndClick(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_description'][@text='Object-oriented programming language']"),
+                "Cannot find article",
+                20);
+
+        Assert.assertTrue(assertElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text'][@text='Java (programming language)']")));
+    }
+
+    public boolean assertElementPresent(By by){
+        return driver.findElement(by).isDisplayed();
+    }
+
     public void moveAndClickAction(WebElement by, int timeOfSwipe) {
         Dimension size = driver.manage().window().getSize();
         int x = (int) (size.width * 0.9);
