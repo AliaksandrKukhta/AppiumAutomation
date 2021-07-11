@@ -205,14 +205,9 @@ public class FirstTest {
         leftSwipe(By.xpath("//*[@text='Java (programming language)']"),
                 "Cannot find article");
 
-        Assert.assertEquals(sizeOfArticles, getListOfArticlesInSave(By.xpath("//*[contains(@resource-id, 'org.wikipedia:id/page_list_item_container')]"),
-                "Cannot find list", 15)-1);
-    }
-
-    public int getListOfArticlesInSave(By by, String errorMessage, int time){
-        List<WebElement> listOfArticles = assertElementsHasText(by, errorMessage, time);
-
-        return listOfArticles.size();
+        Assert.assertTrue(waitForElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Appium']"),
+                "Cannot find article",
+                20).isDisplayed());
     }
 
     public void moveAndClickAction(WebElement by, int timeOfSwipe) {
