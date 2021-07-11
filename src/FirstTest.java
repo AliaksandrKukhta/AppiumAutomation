@@ -225,11 +225,11 @@ public class FirstTest {
                 "Cannot find article",
                 20);
 
-        Assert.assertTrue(assertElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text'][@text='Java (programming language)']")));
+        Assert.assertEquals("Object-oriented programming language", assertElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text'][@text='Java (programming language)']"), "title"));
     }
 
-    public boolean assertElementPresent(By by){
-        return driver.findElement(by).isDisplayed();
+    public String assertElementPresent(By by, String attribute){
+        return driver.findElement(by).getAttribute(attribute);
     }
 
     public void moveAndClickAction(WebElement by, int timeOfSwipe) {
