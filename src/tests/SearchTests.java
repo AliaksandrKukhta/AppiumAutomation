@@ -1,7 +1,6 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -44,14 +43,18 @@ public class SearchTests extends CoreTestCase {
     }
 
     @Test
-    public void testOfTitlePresent() {
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+    public void testOfTitlePresent() throws InterruptedException {
         SearchPageObject searchPageObject = new SearchPageObject(driver);
-        String value = "Object-oriented programming language";
+        String title = "Java (programming language";
+        String description = "Object-oriented programming language";
         searchPageObject.initSearchInput();
         searchPageObject.inputInSearchLine("Java");
-        searchPageObject.waitForSearchResultByXpath("Object-oriented programming language");
-
-        assertEquals(value, articlePageObject.getSomeTitle());
+        Thread.sleep(5000);
+        List<WebElement> list = searchPageObject.getListOfArticleResults();
+        int actualSize = list.size();
+        int expectedSize = 2;
+        boolean comparison = actualSize>expectedSize;
+        searchPageObject.waitForElementByTitleAndDescription(title, description);
+        assertTrue(comparison);
     }
 }

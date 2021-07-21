@@ -15,7 +15,9 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_TITLE_RESULT = "//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{SUBSTRING}']",
             CLEAR_LINE = "org.wikipedia:id/search_close_btn",
             SEARCH_LIST_RESULT = "//*[contains(@resource-id, 'org.wikipedia:id/page_list_item_title')]",
-            SEARCH_END_OF_PAGE = "//*[@text='View page in browser']";
+            SEARCH_END_OF_PAGE = "//*[@text='View page in browser']",
+            DOUBLE_SEARCH="//android.widget.TextView[@text='{TITLE})']//../android.widget.TextView[@text='{DESCRIPTION}']",
+            SEARCH_ARTICLE_LIST = "//*[@resource-id='org.wikipedia:id/page_list_item_container']";
 
 
     public SearchPageObject(AppiumDriver driver) {
@@ -24,6 +26,11 @@ public class SearchPageObject extends MainPageObject {
 
     private String getResultSearchDescriptionElement(String substring) {
         return SEARCH_DESCRIPTION_RESULT.replace("{SUBSTRING}", substring);
+    }
+
+    private String getResultSearchTitleAndDescriptionElement(String title, String description) {
+        String afterFirstChanging = SEARCH_DESCRIPTION_RESULT.replace("{TITLE}", title);
+        return afterFirstChanging.replace("{DESCRIPTION}", description);
     }
 
     private String getResultSearchTitleElement(String substring) {
@@ -79,5 +86,17 @@ public class SearchPageObject extends MainPageObject {
         swipeToElement(By.xpath(SEARCH_END_OF_PAGE),
                 "Cannot go to the end of page",
                 maxSwipe);
+    }
+
+    public void  waitForElementByTitleAndDescription(String title, String description){
+        getResultSearchTitleAndDescriptionElement(title, description);
+    }
+
+    public void clickOnDoubleSearch(){
+        waitForElementPresent(By.xpath(DOUBLE_SEARCH), "Cannot find article with title and description", 15);
+    }
+
+    public List<WebElement> getListOfArticleResults() {
+        return assertElementsHasText(By.xpath(SEARCH_ARTICLE_LIST), "Cannot find list of articles", 10);
     }
 }
